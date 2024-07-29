@@ -6,7 +6,7 @@ It provides a straightforward way to retrieve issue data, save it in JSON format
 ## Project Overview
 
 This project is designed to help developers and data analysts easily access and manage GitHub issue data. 
-It offers a simple command-line interface to fetch the latest issues from a GitHub repository, and provides functionalities to save the issues as a JSON file and convert them to a CSV format. 
+It offers a simple command-line interface to fetch the latest issues from a GitHub repository and provides functionalities to save the issues as a JSON file and convert them to a CSV format. 
 
 ## Requirements
 
@@ -16,13 +16,13 @@ It offers a simple command-line interface to fetch the latest issues from a GitH
 ## Installation
 
 1. Clone the repository:
-    ```
+    ```sh
     git clone https://github.com/quadratic404/github-issue-fetcher.git
     cd github-issue-fetcher
     ```
 
 2. Install the package:
-    ```
+    ```sh
     pip install .
     ```
 
@@ -46,7 +46,7 @@ It offers a simple command-line interface to fetch the latest issues from a GitH
     ```
 
 2. Run the client application:
-    ```
+    ```sh
     python client.py
     ```
 
@@ -59,17 +59,22 @@ This will prompt you to enter the number of issues to fetch from the `kubernetes
 1. Open a terminal or command prompt.
 2. Navigate to the directory containing `client.py`.
 3. Run the script using the command:
-    ```
+    ```sh
     python client.py
     ```
 
 ### Using Console Entry Point
 
-1. Ensure you have installed the package as described in the setup section.
+1. Ensure you have installed the package as described in the installation section.
 2. Run the script using the console entry point:
-    ```
+    ```sh
     github_issue_fetcher
     ```
+
+## Functionality
+
+- The script will prompt you to enter the number of issues you want to fetch.
+- It supports fetching more than 100 issues by making multiple requests to the GitHub API, as the API has a limit of fetching 100 issues per request.
 
 ## File Descriptions
 
@@ -84,3 +89,4 @@ This will prompt you to enter the number of issues to fetch from the `kubernetes
 
 - Ensure you have a stable internet connection while running the script.
 - Set the `GITHUB_TOKEN` environment variable with a valid token to avoid authorization issues.
+- The script will prompt for the number of issues to fetch and can handle requests exceeding 100 issues by making multiple API calls.
