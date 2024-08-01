@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='github_issue_fetcher',  
+    name='github',  
     version='0.1',
     packages=find_packages(where='issue_manager'),  # Specify the package directory correctly
     install_requires=[
@@ -9,7 +9,7 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'github_issue_fetcher=client:client_app',  
+            'github=client:client_app',  
         ],
     },
     include_package_data=True,  # Include other files specified in MANIFEST.in (if used)
