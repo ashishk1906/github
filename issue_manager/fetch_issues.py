@@ -1,31 +1,49 @@
 import requests
 import json
 
-def fetch_issues(token, repo_owner, repo_name, num_issues):
+def fetch_issues(token, repo_owner, repo_name, start_issue_number=None, end_issue_number=None, num_issues=None):
     headers = {'Authorization': f'token {token}'}
     issues = []
     page = 1
     per_page = 100
 
-    while len(issues) < num_issues:
-        remaining_issues = num_issues - len(issues)
-        per_page = min(remaining_issues, per_page)
-        
-        url = f'https://api.github.com/repos/{repo_owner}/{repo_name}/issues'
-        params = {'state': 'open', 'per_page': per_page, 'page': page, 'sort': 'created', 'direction': 'desc'}
-        
-        response = requests.get(url, headers=headers, params=params)
-        response.raise_for_status()
-        
-        fetched_issues = response.json()
-        if not fetched_issues:
-            break
-        
-        issues.extend(fetched_issues)
-        page += 1
+    try:
+        while True:
+            url = f'https://api.github.com/repos/{repo_owner}/{repo_name}/issues'
+            params = {'state': 'all', 'per_page': per_page, 'page': page, 'sort': 'created', 'direction': 'desc' if num_issues else 'asc'}
+            
+            response = requests.get(url, headers=headers, params=params)
+            
+            # Check for HTTP errors
+            response.raise_for_status()
+            
+            # Check for GitHub API error in response
+            if response.status_code == 401:
+                raise ValueError("Invalid GitHub token. Please check your token and try again.")
+            
+            fetched_issues = response.json()
+            if not fetched_issues:
+                break
+            
+            if start_issue_number is not None and end_issue_number is not None:
+                for issue in fetched_issues:
+                    issue_number = issue['number']
+                    if start_issue_number <= issue_number <= end_issue_number:
+                        issues.append(issue)
+                    elif issue_number > end_issue_number:
+                        return issues
+            else:
+                issues.extend(fetched_issues[:num_issues])
+                if len(issues) >= num_issues:
+                    return issues[:num_issues]
+            
+            page += 1
 
-    return issues[:num_issues]
+    except requests.exceptions.RequestException as e:
+        print(f"An error occurred: {e}")
+    
+    return issues
 
-def save_issues_as_json(issues, file_path):
+def save_data_as_json(data, file_path):
     with open(file_path, 'w') as f:
-        json.dump(issues, f, indent=2)
+        json.dump(data, f, indent=2)
