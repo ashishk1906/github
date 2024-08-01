@@ -15,8 +15,8 @@ This project is designed to help developers and data analysts easily access and 
 
 1. Clone the repository:
     ```sh
-    git clone https://github.com/quadratic404/github-issue-fetcher.git
-    cd github-issue-fetcher
+    git clone https://github.com/quadratic404/github.git
+    cd github
     ```
 
 2. Install the package:
