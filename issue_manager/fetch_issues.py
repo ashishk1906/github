@@ -1,5 +1,6 @@
 import requests
 import json
+import time
 
 def fetch_issues(token, repo_owner, repo_name, start_issue_number=None, end_issue_number=None, num_issues=None):
     headers = {'Authorization': f'token {token}'}
@@ -21,6 +22,15 @@ def fetch_issues(token, repo_owner, repo_name, start_issue_number=None, end_issu
             if response.status_code == 401:
                 raise ValueError("Invalid GitHub token. Please check your token and try again.")
             
+            # Check rate limit headers
+            remaining = int(response.headers.get('X-RateLimit-Remaining', 0))
+            reset_time = int(response.headers.get('X-RateLimit-Reset', 0))
+            if remaining == 0:
+                reset_in = reset_time - time.time()
+                if reset_in > 0:
+                    print(f"Rate limit exceeded. Sleeping for {reset_in} seconds.")
+                    time.sleep(reset_in + 1)  # Sleep a bit longer to ensure rate limit is reset
+
             fetched_issues = response.json()
             if not fetched_issues:
                 break
